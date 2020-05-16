@@ -59,8 +59,8 @@ export const Game: FunctionComponent<Game> = ({ gameDb, playerId }) => {
   const addTransaction = useCallback(() => {
     if (transactions && transactions?.docs.length >= 10) return;
     const newTransaction = {
-      a: Math.floor(Math.random() * 10),
-      b: Math.floor(Math.random() * 10),
+      a: Math.floor(Math.random() * 50),
+      b: Math.floor(Math.random() * 50),
       timestamp: Date.now(),
     };
 
@@ -116,9 +116,7 @@ export const Game: FunctionComponent<Game> = ({ gameDb, playerId }) => {
 
   useInterval(addTransaction, 10000);
 
-  console.log(
-    countdown?.exists && countdown.data && countdown?.data()?.endTime
-  );
+  console.log(completedTransactions);
 
   return (
     <>
@@ -159,7 +157,7 @@ export const Game: FunctionComponent<Game> = ({ gameDb, playerId }) => {
         </Modal.Dialog>
       </Modal>
       <div className="container">
-        <div className="countdown-container">
+        {/* <div className="countdown-container">
           {countdown?.data()?.endTime}
           <Countdown
             date={countdown?.data()?.endTime}
@@ -172,14 +170,14 @@ export const Game: FunctionComponent<Game> = ({ gameDb, playerId }) => {
             date={Date.now() + 10000}
             precision={3}
             renderer={(props) => <div>{props.total}</div>}
-          /> */}
-        </div>
-        <div>
+          />
+        </div> */}
+        {/* <div>
           <h2>
             Skim? {skimming ? "ON" : "OFF"}{" "}
             <button onClick={toggleSkimming}>Toggle</button>
           </h2>
-        </div>
+        </div> */}
         <div className="transactions">
           <h2>Transactions to enter</h2>
           {!transactionsLoading && !transactionsError && transactions && (
@@ -246,16 +244,24 @@ export const Game: FunctionComponent<Game> = ({ gameDb, playerId }) => {
             );
           })}
       </div> */}
+        {console.log(
+          "SCORES",
+          playerScores &&
+            playerScores.docs.reduce((acc, doc) => {
+              console.log(doc.data().score, acc);
+              return doc.data().score + acc;
+            }, 0)
+        )}
         <h2>Group fees earned</h2>
         <div>
           <FormatAmount
             number={
               (playerScores &&
-                playerScores.docs.reduce(
-                  (acc, doc) => doc.data().score + acc,
-                  0
-                )) ||
-              0
+                playerScores.docs.reduce((acc, doc) => {
+                  console.log(doc.data());
+                  return acc + (doc.data().score || 0);
+                }, 0)) ||
+              999
             }
           ></FormatAmount>
         </div>

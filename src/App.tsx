@@ -15,7 +15,7 @@ function App() {
     setGameDb,
   ] = useState<firebase.firestore.DocumentReference | null>(null);
   const [gameId, setGameId] = useState("game-id");
-  const [playerId, setPlayerId] = useState("Ryan");
+  const [playerId, setPlayerId] = useState("");
   const [playerIdInput, setPlayerIdInput] = useState("");
 
   useEffect(() => {
@@ -25,9 +25,9 @@ function App() {
   }, [gameId]);
 
   useEffect(() => {
-    if (!gameDb) return;
+    if (!gameDb || !playerId) return;
     gameDb.collection("player-scores").doc(playerId).set({}, { merge: true });
-  });
+  }, [playerId]);
 
   if (!gameDb) return <div>"Loading...";</div>;
   if (!playerId)
@@ -41,7 +41,7 @@ function App() {
             value={playerIdInput}
             onChange={({ target: { value } }) => setPlayerIdInput(value)}
           />{" "}
-          <input disabled={!playerIdInput} type="submit" value="" />
+          <input disabled={!playerIdInput} type="submit" value="Submit" />
         </form>
       </div>
     );
